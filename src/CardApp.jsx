@@ -1,125 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { CatalogView } from './components/CatalogView';
+import { CartView } from './components/CartView';
+
+const initialCartItems = [
+    // {
+    //     product: {
+    //         id: 1,
+    //         name: 'Teclado Mecanico RGB',
+    //         description: 'Teclado Mecánico con luces RGB switches cherry red',
+    //         price: 1000
+    //     },
+    //     quantity: 0,
+    //     total: 0
+    // }
+
+]
 
 export const CardApp = () => {
-  return (
-    <>
-        
 
-        <div className='container'>
-            <h3>Cart App</h3>
-            
-            {/*Lista Productos*/}
-            <div className='row'> 
-                {/*Primer Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Teclado Mecanico RGB</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 1000</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
-                    </div>
-                </div>
+    const [ cartItems, setCartItems] = useState(initialCartItems);
+    const handlerAddProductCart = (product) => {
 
-                {/*Segundo Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Samsung Smart TV 55</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 3000</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
-                    </div>
-                </div>
+        const hasItem = cartItems.find((i) => i.product.id === product.id);
+        if(hasItem){
+            setCartItems(
+                cartItems.map( (i) => {
+                    if(i.product.id === product.id){
+                        i.quantity = i.quantity + 1;
+                    }    
+                    return i; 
+                })
+            );
+        }else {
+            setCartItems([
+                ...cartItems, 
+                {
+                    product,
+                    quantity: 1,
+                }
+            ]);
+        }
+    }
 
-                {/*Tercer Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Audifono Bluetooth Sony</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 770</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
-                    </div>
-                </div>
+    const handlerDeleteProductCard = (id) => {
+        setCartItems([
+            ...cartItems.filter((i) => i.product.id !== id)
+        ])
+    }
 
-                {/*Cuarto Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Memoria Corsair 8GB DDR5</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 3000</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
-                    </div>
-                </div>
+    return (
+        <>
+            <div className='container'>
+                <h3>Cart App</h3>
+                
+                {/*Lista de Productos*/}
+                <CatalogView handler={ handlerAddProductCart }/>
+                
 
-                {/*Quinto Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>Asus Nvidia RTX</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 5000</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
+                {/*Tabla de Items*/}
+                { cartItems?.length <= 0 || 
+                ( 
+                    <div className="my-4 w-50">
+                        <CartView 
+                            items={cartItems}
+                            handlerDelete={handlerDeleteProductCard}
+                        />
                     </div>
-                </div>
-
-                {/*Sexto Producto*/}
-                <div className='col-4 my-2'>    
-                    <div className='card'>
-                        <div className='card-body'>
-                            <h5 className='card-title'>CPU Intel CORE i5</h5>
-                            <p className='card-text'>Teclado Mecanico con luces RGB switches cherry red</p>
-                            <p className='card-text'>$ 4000</p>
-                            <button className='btn btn-primary'>Agregar</button>
-                        </div>
-                    </div>
-                </div>
+                )}   
             </div>
-
-            {/*Tabla de Items*/}
-            <div className='my-4 w-50'>
-                <h3>Carro de Compras</h3>
-                <table className='table table-hover table-striped'>
-                    {/*Cabecera*/}
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Total</th>
-                            <th>Eliminar</th>
-                        </tr>
-                    </thead>
-
-                    {/*Cuerpo*/}
-                    <tbody>
-                        <tr>
-                            <td>nombre</td>
-                            <td>precio</td>
-                            <td>cantidad</td>
-                            <td>total</td>
-                            <td>eliminar</td>
-                        </tr>
-                    </tbody>
-
-                    {/*Footer*/}
-                    <tfoot>
-                        <tr>
-                            <td colSpan="2"></td>
-                            <td colSpan="1" className='text-start fw-bold'>Total</td>
-                            <td colSpan="2" className='text-start fw-bold'>12345</td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-    </>
-  )
+        </>
+    )
 }
